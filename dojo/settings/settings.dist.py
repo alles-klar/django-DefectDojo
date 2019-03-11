@@ -42,7 +42,7 @@ DEBUG = env('DD_DEBUG')
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["127.0.0.1"] # tuple(env.list('DD_ALLOWED_HOSTS', default=[]))
+ALLOWED_HOSTS = tuple(env.list('DD_ALLOWED_HOSTS', default=[]))
 
 # Raises django's ImproperlyConfigured exception if SECRET_KEY not in os.environ
 SECRET_KEY = env('DD_SECRET_KEY')
@@ -356,9 +356,9 @@ vars().update(EMAIL_CONFIG)
 # ------------------------------------------------------------------------------
 
 # Celery settings
-CELERY_BROKER_URL = 'sqla+sqlite:///dojo.celerydb.sqlite'
+CELERY_BROKER_URL = env('DD_CELERY_BROKER_URL')
 CELERY_TASK_IGNORE_RESULT = True
-CELERY_RESULT_BACKEND = 'db+sqlite:///dojo.celeryresults.sqlite'
+CELERY_RESULT_BACKEND = env('DD_CELERY_BROKER_URL')
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_RESULT_EXPIRES = 86400
 CELERY_BEAT_SCHEDULE_FILENAME = DOJO_ROOT + '/dojo.celery.beat.db'

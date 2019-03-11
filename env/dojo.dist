@@ -1,0 +1,24 @@
+#Dojo Admin User
+ADMIN_USER=DojoAdmin
+ADMIN_PASS=
+ADMIN_EMAIL=admin@dojo.local
+
+# Enables Django Admin
+DD_DJANGO_ADMIN_ENABLED=on
+
+#DOJO Web Setup
+DD_DEBUG=off
+DD_ALLOWED_HOSTS=*
+# A secret key for a particular Django installation.
+DD_SECRET_KEY="Secret"
+# Key for encrypting credentials in the manager
+DD_CREDENTIAL_AES_256_KEY='Secret'
+DD_CELERY_BROKER_URL=redis://broker:6379/0
+
+#DB
+DB_TYPE=PostgreSQL
+DB_HOST=db
+DB_PORT=5432
+DB_NAME=postgres
+DB_USER=postgres
+DB_PASS=

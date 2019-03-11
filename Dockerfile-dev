@@ -1,0 +1,49 @@
+########## Stage: build ##########
+FROM python:3.7.2 as base
+
+# Update and install basic requirements
+# hadolint ignore=DL3008
+RUN apt-get update && apt-get install --no-install-recommends -y default-libmysqlclient-dev libjpeg-dev gcc libssl-dev wkhtmltopdf build-essential curl apt-transport-https expect xmlsec1 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+# hadolint ignore=DL3013
+RUN pip install --upgrade pip
+WORKDIR /opt/django-DefectDojo
+
+FROM base as yarn
+#COPY components/* /tmp/components/
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# hadolint ignore=DL3008
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    #Node
+    && curl -sL https://deb.nodesource.com/setup_6.x | bash \
+    && apt-get update && apt-get install --no-install-recommends -y nodejs yarn \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+COPY components/ components/
+WORKDIR /opt/django-DefectDojo/components
+RUN yarn
+WORKDIR /opt/django-DefectDojo
+
+FROM base as build
+ENV PYTHONUNBUFFERED 1
+WORKDIR /opt/django-DefectDojo
+
+# Install python packages
+COPY setup/requirements.txt setup/postgresql.txt setup/
+RUN pip install --no-cache-dir --upgrade pip
+RUN pip install --no-cache-dir -r setup/postgresql.txt
+
+# Add the application files
+COPY --from=yarn /opt/django-DefectDojo/components components
+COPY entrypoint_scripts entrypoint_scripts
+COPY manage.py setup.py wsgi.py wsgi_params docker-start.bash wait-for-it.sh ./
+RUN chmod +x wait-for-it.sh docker-start.bash entrypoint_scripts/common/setup-superuser.expect
+
+#RUN groupadd -r dojo && useradd --no-log-init -r -g dojo dojo \
+#    && chown -R dojo /opt/django-DefectDojo/
+#USER dojo
+
+#CMD ["./docker-start.bash","-s"]
+#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

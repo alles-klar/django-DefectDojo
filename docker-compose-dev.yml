@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  db:
+    restart: always
+    image: postgres:11
+    env_file:
+      - ./env/postgres.env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - dojo-dev-db:/var/lib/postgresql/data/pgdata
+  dojo:
+    build:
+      context: "."
+      dockerfile: Dockerfile-dev
+    ports:
+      - "8000:8000"
+    links:
+      - db:db
+    volumes:
+      - ./tests:/opt/django-DefectDojo/tests
+      - ./dojo:/opt/django-DefectDojo/dojo
+    depends_on:
+      - db
+    env_file:
+      - ./env/dojo.env
+    command: ./wait-for-it.sh db:5432 -- ./docker-start.bash -s
+volumes:
+  dojo-dev-db: {}

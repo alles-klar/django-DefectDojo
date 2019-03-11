@@ -3,7 +3,8 @@ coverage==4.5.1
 defusedxml==0.5.0
 Django==2.0.10 # updated from 1.11.16
 django-auditlog==0.4.5
-git+https://git@github.com/Maffooch/django-custom-field.git
+-e git+https://git@github.com/Maffooch/django-custom-field.git#egg=django-custom-field
+# django-custom-field==2.9
 django-filter==1.0.4
 django-imagekit==4.0.2
 django-multiselectfield==0.1.8
@@ -16,14 +17,15 @@ django-slack==5.11.1
 django-rest-swagger==2.1.2
 django-tagging==0.4.6
 django-tastypie==0.14.2 # updated from 0.14.0
-git+https://git@github.com/Maffooch/django-tastypie-swagger.git
+-e git+https://git@github.com/Maffooch/django-tastypie-swagger.git#egg=django-tastypie-swagger
+# django-tastypie-swagger==0.1.4
 django-watson==1.5.2
 django-rest-swagger==2.1.2
 djangorestframework==3.9.0
 gunicorn==19.7.1
 html2text==2018.1.9
 humanize==0.5.1
-jira==1.0.13
+jira==2.0.0 #1.0.13
 lxml==4.1.1
 # TODO mysql-connector-python==8.0.14 # Needs to have the following somewhere : DD_DATABASE_URL=mysql.connector.django://user:pass@127.0.0.1:3306/dojodb3
 pdfkit==0.6.1
@@ -47,3 +49,4 @@ django-taggit-serializer==0.1.7
 whitenoise>=4.0
 django-environ==0.4.5
 pygments==2.2.0
+redis==3.2.0
