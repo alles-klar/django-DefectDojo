@@ -3,7 +3,7 @@
 FROM python:2
 WORKDIR /app
 RUN \
-  apt-get -y update && \
+  apt-gget -y update && \
   apt-get -y install \
     dnsutils \
     mysql-client \
