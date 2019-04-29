@@ -1,10 +1,10 @@
 
 # code: language=Dockerfile
-FROM python:2
+FROM python:3.7
 WORKDIR /app
 RUN \
   apt-get -y update && \
-  apt-get -y install \
+  apt-get -y install --no-install-recommends \
     dnsutils \
     mysql-client \
     postgresql-client \
@@ -12,8 +12,7 @@ RUN \
   apt-get clean && \
   rm -rf /var/lib/apt/lists && \
   true
-COPY requirements.txt ./
-RUN pip install \
-	--no-cache-dir \
-	-r ./requirements.txt
-RUN pip wheel --wheel-dir=/tmp/wheels -r ./requirements.txt
+COPY setup/requirements.txt ./
+COPY setup.py ./
+COPY dojo/ ./dojo/
+RUN pip wheel --wheel-dir=/tmp/wheels -r ./requirements.txt .

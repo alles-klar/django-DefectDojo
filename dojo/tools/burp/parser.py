@@ -5,7 +5,7 @@ See the file 'doc/LICENSE' for the license information
 
 """
 from __future__ import with_statement
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 import re
 # from defusedxml import ElementTree as etree

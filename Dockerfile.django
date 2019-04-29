@@ -1,6 +1,6 @@
 
 # code: language=Dockerfile
-FROM python:2-slim
+FROM python:3.7-slim
 WORKDIR /app
 RUN \
   apt-get -y update && \
@@ -12,18 +12,20 @@ RUN \
     dnsutils \
     mysql-client \
     libmariadbclient18 \
+    # libxslt1.1 is required by the lxml package
+    libxslt1.1 \
     && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists && \
   true
 RUN pip install --no-cache-dir --upgrade pip
 COPY --from=defectdojo/defectdojo-build:latest /tmp/wheels /tmp/wheels
-COPY requirements.txt ./
+COPY setup/requirements.txt ./
 RUN pip install \
 	--no-cache-dir \
 	--no-index \
   --find-links=/tmp/wheels \
-  -r ./requirements.txt
+  DefectDojo
 COPY \
   docker/entrypoint-celery-beat.sh \
   docker/entrypoint-celery-worker.sh \
