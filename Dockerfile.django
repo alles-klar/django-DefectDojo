@@ -16,8 +16,12 @@ RUN \
   apt-get clean && \
   rm -rf /var/lib/apt/lists && \
   true
-COPY requirements.txt ./
-RUN pip wheel --wheel-dir=/tmp/wheels -r ./requirements.txt
+COPY dojo/ ./dojo/
+# Legacy installs need the modified settings.py, do not remove!
+RUN \
+  cp dojo/settings/settings.dist.py dojo/settings/settings.py
+COPY requirements.txt setup.py ./
+RUN pip wheel --wheel-dir=/tmp/wheels -r ./requirements.txt .
 
 FROM python:2-slim
 WORKDIR /app
@@ -41,12 +45,11 @@ RUN \
   true
 RUN pip install --no-cache-dir --upgrade pip
 COPY --from=build /tmp/wheels /tmp/wheels
-COPY requirements.txt ./
 RUN pip install \
 	--no-cache-dir \
 	--no-index \
   --find-links=/tmp/wheels \
-  -r ./requirements.txt
+  DefectDojo
 COPY \
   docker/entrypoint-celery-beat.sh \
   docker/entrypoint-celery-worker.sh \
@@ -57,12 +60,9 @@ COPY \
   docker/wait-for-it.sh \
   /
 COPY wsgi.py manage.py tests/unit-tests.sh ./
-COPY dojo/ ./dojo/
-# Legacy installs need the modified settings.py, do not remove!
-RUN \
-  cp dojo/settings/settings.dist.py dojo/settings/settings.py
 COPY tests/ ./tests/
 RUN \
+  mkdir dojo && \
   mkdir dojo/migrations && \
   chmod g=u dojo/migrations && \
   chmod g=u /var/run && \
@@ -96,4 +96,4 @@ ENV \
   DD_UWSGI_ENDPOINT="0.0.0.0:3031" \
   DD_DJANGO_ADMIN_ENABLED="on" \
   DD_TRACK_MIGRATIONS="on"
-ENTRYPOINT ["/entrypoint-uwsgi.sh"]
+CMD ["/entrypoint-uwsgi.sh"]

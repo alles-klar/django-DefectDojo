@@ -10,7 +10,7 @@ setup(
     install_requires=[
         'defusedxml',
         'Django==1.11.20',
-        'django-auditlog==0.4.0',
+        'django-auditlog>=0.4.0',
         'django-custom-field',
         'django-filter==1.0.4',
         'django-imagekit',
@@ -63,11 +63,13 @@ setup(
         'pandas>=0.22.0',
         'django-dbbackup>=3.2.0',
         'django-taggit-serializer==0.1.7',
-        'whitenoise==4.0',
+        'whitenoise>=4.0',
         'django-environ==0.4.5',
     ],
 
-    extras_require={'mysql': ['mysqlclient==1.3.12']},
+    extras_require={'mysql': ['mysqlclient==1.3.12'],
+                    'uwsgi': ['uwsgi>=2.0'],
+    },
 
     dependency_links=[
         "https://github.com/grendel513/python-pdfkit/tarball/master#egg=pdfkit-0.5.0"
